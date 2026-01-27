@@ -74,7 +74,10 @@ function VariableRow({
   const displayValue = value ?? variable.default ?? "";
 
   return (
-    <div className="grid gap-3 rounded-2xl border border-ink/10 bg-white px-4 py-3 md:grid-cols-[1.4fr_1fr_auto] md:items-center">
+    <div className={cn(
+      "grid gap-3 rounded-2xl border border-ink/10 bg-white px-4 py-3 md:grid-cols-[1.4fr_1fr_auto] md:items-center",
+      readOnly && "bg-mist/60"
+    )}>
       <div>
         <p className="text-sm font-medium text-ink">{variable.label}</p>
         <p className="text-xs text-ink/50">
