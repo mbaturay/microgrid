@@ -6,12 +6,17 @@
   color-scheme: light;
 }
 
+html {
+  font-size: 17px;
+}
+
 * {
   @apply border-ink/10;
 }
 
 body {
   @apply bg-cloud text-ink font-sans antialiased;
+  line-height: 1.6;
 }
 
 h1, h2, h3, h4 {
@@ -34,4 +39,13 @@ h1, h2, h3, h4 {
 
 .input-lock {
   @apply inline-flex items-center gap-1 text-xs text-ink/60;
+}
+
+/* Improve contrast for muted text helpers */
+.text-ink\/60 {
+  color: rgba(31, 33, 35, 0.72);
+}
+
+.text-ink\/50 {
+  color: rgba(31, 33, 35, 0.64);
 }
