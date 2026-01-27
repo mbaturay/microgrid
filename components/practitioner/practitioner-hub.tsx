@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
+import Link from "next/link";
 import { Download, UploadCloud, Lock } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -29,7 +30,15 @@ const tabList = [
   "Outputs",
 ];
 
-export default function PractitionerHub({ projectId }: { projectId?: string }) {
+type LensMode = "executive" | "practitioner";
+
+export default function PractitionerHub({
+  projectId,
+  mode = "practitioner",
+}: {
+  projectId?: string;
+  mode?: LensMode;
+}) {
   const [projects, setProjects] = useState<ProjectModel[]>([]);
   const [activeId, setActiveId] = useState<string | undefined>(projectId);
 
@@ -105,6 +114,8 @@ export default function PractitionerHub({ projectId }: { projectId?: string }) {
     );
   }
 
+  const isExecutive = mode === "executive";
+
   return (
     <div className="space-y-8">
       <section className="grid gap-6 lg:grid-cols-[1.3fr_1fr]">
@@ -112,7 +123,7 @@ export default function PractitionerHub({ projectId }: { projectId?: string }) {
           <div className="flex flex-wrap items-start justify-between gap-4">
             <div>
               <p className="text-xs uppercase tracking-[0.2em] text-ink/50">
-                Practitioner Workspace
+                {isExecutive ? "Executive Lens" : "Practitioner Workspace"}
               </p>
               <h1 className="mt-2 text-3xl font-semibold">
                 {activeProject.name}
@@ -121,18 +132,42 @@ export default function PractitionerHub({ projectId }: { projectId?: string }) {
                 {activeProject.region} · {activeProject.stage}
               </p>
             </div>
-            <div className="flex flex-wrap gap-2">
-              <Button size="sm" variant="outline" onClick={exportJson}>
+            <div className="flex flex-wrap items-center gap-2">
+              <div className="flex items-center gap-2 rounded-full bg-mist p-1">
+                <Link
+                  href={`/project/${activeProject.id}?lens=executive`}
+                  className={`rounded-full px-3 py-1.5 text-xs font-medium ${
+                    isExecutive ? "bg-white text-ink shadow" : "text-ink/60"
+                  }`}
+                >
+                  Executive
+                </Link>
+                <Link
+                  href={`/project/${activeProject.id}?lens=practitioner`}
+                  className={`rounded-full px-3 py-1.5 text-xs font-medium ${
+                    !isExecutive ? "bg-white text-ink shadow" : "text-ink/60"
+                  }`}
+                >
+                  Practitioner
+                </Link>
+              </div>
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={exportJson}
+                disabled={isExecutive}
+              >
                 <Download className="h-4 w-4" />
                 Export Project JSON
               </Button>
-              <label className="inline-flex cursor-pointer items-center gap-2 rounded-full border border-ink/20 px-4 py-2 text-sm font-medium text-ink/70 hover:bg-mist">
+              <label className={`inline-flex items-center gap-2 rounded-full border border-ink/20 px-4 py-2 text-sm font-medium text-ink/70 ${isExecutive ? "cursor-not-allowed opacity-50" : "cursor-pointer hover:bg-mist"}`}>
                 <UploadCloud className="h-4 w-4" />
                 Import JSON
                 <input
                   type="file"
                   accept=".json"
                   className="hidden"
+                  disabled={isExecutive}
                   onChange={(event) => {
                     const file = event.target.files?.[0];
                     if (file) importJson(file);
@@ -150,8 +185,18 @@ export default function PractitionerHub({ projectId }: { projectId?: string }) {
               value={formatCurrency(activeProject.outputs.annualSavings)}
             />
           </div>
+          {isExecutive && (
+            <div className="mt-4 inline-flex items-center gap-2 rounded-full bg-ink/5 px-3 py-1 text-xs text-ink/60">
+              <Lock className="h-3 w-3" />
+              Executive lens is view-only. Switch to Practitioner to edit inputs.
+            </div>
+          )}
         </div>
-        <TrackSelector value={activeProject.track} onChange={handleTrackChange} />
+        <TrackSelector
+          value={activeProject.track}
+          onChange={handleTrackChange}
+          disabled={isExecutive}
+        />
       </section>
 
       <section>
@@ -235,6 +280,7 @@ export default function PractitionerHub({ projectId }: { projectId?: string }) {
                 values={activeProject.variables}
                 onChange={handleVariableChange}
                 onReset={handleReset}
+                readOnly={isExecutive}
               />
               <OutputsPanel outputs={activeProject.outputs} />
             </div>
@@ -245,6 +291,7 @@ export default function PractitionerHub({ projectId }: { projectId?: string }) {
               <IntervalDataUploader
                 value={activeProject.intervalData}
                 onChange={handleIntervalChange}
+                readOnly={isExecutive}
               />
               <Card>
                 <CardHeader>

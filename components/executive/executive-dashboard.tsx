@@ -11,6 +11,8 @@ import { cn, formatCurrency, formatNumber, formatPercent } from "@/lib/utils";
 import { loadPortfolio, savePortfolio } from "@/lib/model/storage";
 import { ProjectModel } from "@/lib/model/types";
 
+type LensMode = "executive" | "practitioner";
+
 const STAGES = ["Proposed", "Analysis", "Green Ink", "Construction", "Complete"];
 
 function useAnimatedNumber(value: number, duration = 900) {
@@ -65,7 +67,11 @@ function computeMetrics(projects: ProjectModel[]) {
   };
 }
 
-export default function ExecutiveDashboard() {
+export default function ExecutiveDashboard({
+  lens = "executive",
+}: {
+  lens?: LensMode;
+}) {
   const [projects, setProjects] = useState<ProjectModel[]>([]);
 
   useEffect(() => {
@@ -90,17 +96,22 @@ export default function ExecutiveDashboard() {
           <div className="flex items-start justify-between">
             <div>
               <p className="text-xs uppercase tracking-[0.2em] text-ink/50">
-                Executive Portfolio Overview
+                {lens === "executive"
+                  ? "Executive Portfolio Overview"
+                  : "Practitioner Portfolio Overview"}
               </p>
               <h1 className="mt-2 text-3xl font-semibold">
                 Solar & Microgrid Portfolio Command Center
               </h1>
               <p className="mt-3 max-w-xl text-sm text-ink/60">
-                Read-only analytics for leadership visibility across pipeline,
-                investment exposure, and ROI cadence.
+                {lens === "executive"
+                  ? "Read-only analytics for leadership visibility across pipeline, investment exposure, and ROI cadence."
+                  : "Portfolio view for selecting a project workspace. Changes happen inside project detail."}
               </p>
             </div>
-            <Badge className="bg-jade/10 text-jade">Read-only</Badge>
+            <Badge className={lens === "executive" ? "bg-jade/10 text-jade" : "bg-sun/20 text-ink"}>
+              {lens === "executive" ? "Read-only" : "Editable"}
+            </Badge>
           </div>
           <div className="mt-6 flex flex-wrap gap-3">
             <Badge className="bg-ink/10 text-ink">Portfolio Health: Stable</Badge>
@@ -301,7 +312,7 @@ export default function ExecutiveDashboard() {
             {projects.slice(0, 5).map((project) => (
               <Link
                 key={project.id}
-                href={`/executive/${project.id}`}
+                href={`/project/${project.id}?lens=${lens}`}
                 className="flex items-center justify-between rounded-2xl border border-ink/10 bg-white px-4 py-3 transition hover:border-jade/40"
               >
                 <div>

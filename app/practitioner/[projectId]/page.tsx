@@ -1,4 +1,4 @@
-import PractitionerHub from "@/components/practitioner/practitioner-hub";
+import { redirect } from "next/navigation";
 
 export default async function PractitionerProjectPage({
   params,
@@ -6,5 +6,5 @@ export default async function PractitionerProjectPage({
   params: Promise<{ projectId: string }>;
 }) {
   const resolved = await params;
-  return <PractitionerHub projectId={resolved.projectId} />;
+  redirect(`/project/${resolved.projectId}?lens=practitioner`);
 }

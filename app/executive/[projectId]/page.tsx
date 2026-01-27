@@ -1,4 +1,4 @@
-import ExecutiveProject from "@/components/executive/executive-project";
+import { redirect } from "next/navigation";
 
 export default async function ExecutiveProjectPage({
   params,
@@ -6,5 +6,5 @@ export default async function ExecutiveProjectPage({
   params: Promise<{ projectId: string }>;
 }) {
   const resolved = await params;
-  return <ExecutiveProject projectId={resolved.projectId} />;
+  redirect(`/project/${resolved.projectId}?lens=executive`);
 }

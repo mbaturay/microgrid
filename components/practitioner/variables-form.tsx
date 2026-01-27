@@ -16,10 +16,12 @@ export default function VariablesForm({
   values,
   onChange,
   onReset,
+  readOnly = false,
 }: {
   values: Record<string, number | string | boolean>;
   onChange: (key: string, value: number | string | boolean) => void;
   onReset: (key: string, defaultValue: number | string | boolean | undefined) => void;
+  readOnly?: boolean;
 }) {
   return (
     <div className="space-y-6">
@@ -46,6 +48,7 @@ export default function VariablesForm({
                 value={values[variable.key]}
                 onChange={onChange}
                 onReset={onReset}
+                readOnly={readOnly}
               />
             ))}
           </CardContent>
@@ -60,11 +63,13 @@ function VariableRow({
   value,
   onChange,
   onReset,
+  readOnly,
 }: {
   variable: VariableSchemaItem;
   value: number | string | boolean | undefined;
   onChange: (key: string, value: number | string | boolean) => void;
   onReset: (key: string, defaultValue: number | string | boolean | undefined) => void;
+  readOnly: boolean;
 }) {
   const displayValue = value ?? variable.default ?? "";
 
@@ -77,7 +82,7 @@ function VariableRow({
         </p>
       </div>
       <div className="flex items-center gap-2">
-        {renderInput(variable, displayValue, onChange)}
+        {renderInput(variable, displayValue, onChange, readOnly)}
         {variable.type === "percent" && (
           <span className="text-xs text-ink/50">{formatPercent(Number(displayValue) || 0)}</span>
         )}
@@ -90,6 +95,7 @@ function VariableRow({
           size="sm"
           variant="ghost"
           onClick={() => onReset(variable.key, variable.default)}
+          disabled={readOnly}
         >
           Reset
         </Button>
@@ -101,7 +107,8 @@ function VariableRow({
 function renderInput(
   variable: VariableSchemaItem,
   value: number | string | boolean,
-  onChange: (key: string, value: number | string | boolean) => void
+  onChange: (key: string, value: number | string | boolean) => void,
+  readOnly: boolean
 ) {
   switch (variable.type) {
     case "boolean":
@@ -109,6 +116,7 @@ function renderInput(
         <Switch
           checked={Boolean(value)}
           onCheckedChange={(checked) => onChange(variable.key, checked)}
+          disabled={readOnly}
         />
       );
     case "enum":
@@ -116,6 +124,7 @@ function renderInput(
         <Select
           value={String(value)}
           onValueChange={(next) => onChange(variable.key, next)}
+          disabled={readOnly}
         >
           <SelectTrigger className="w-full">
             <SelectValue placeholder="Select" />
@@ -136,6 +145,7 @@ function renderInput(
           value={String(value)}
           min={variable.min}
           max={variable.max}
+          disabled={readOnly}
           onChange={(event) => {
             const nextValue =
               variable.type === "string"

@@ -10,9 +10,11 @@ import { IntervalData } from "@/lib/model/types";
 export default function IntervalDataUploader({
   value,
   onChange,
+  readOnly = false,
 }: {
   value?: IntervalData;
   onChange: (data?: IntervalData) => void;
+  readOnly?: boolean;
 }) {
   const [error, setError] = useState<string | null>(null);
 
@@ -64,6 +66,7 @@ export default function IntervalDataUploader({
         <input
           type="file"
           accept=".csv"
+          disabled={readOnly}
           onChange={(event) => {
             const file = event.target.files?.[0];
             if (file) handleFile(file);
@@ -89,6 +92,7 @@ export default function IntervalDataUploader({
               variant="ghost"
               className="mt-3"
               onClick={() => onChange(undefined)}
+              disabled={readOnly}
             >
               Clear upload
             </Button>

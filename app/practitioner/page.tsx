@@ -1,5 +1,5 @@
-import PractitionerHub from "@/components/practitioner/practitioner-hub";
+import ExecutiveDashboard from "@/components/executive/executive-dashboard";
 
 export default function PractitionerPage() {
-  return <PractitionerHub />;
+  return <ExecutiveDashboard lens="practitioner" />;
 }
