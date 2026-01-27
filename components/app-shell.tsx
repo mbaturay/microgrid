@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useMemo } from "react";
+import { useEffect, useState } from "react";
+import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -11,14 +12,20 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  const lens = useMemo(() => {
+  const [lens, setLens] = useState<"executive" | "practitioner">("executive");
+
+  useEffect(() => {
     const param = searchParams?.get("lens");
-    if (param === "practitioner" || param === "executive") return param;
+    if (param === "practitioner" || param === "executive") {
+      setLens(param);
+      return;
+    }
     if (typeof window !== "undefined") {
       const stored = window.localStorage.getItem("microgrid:lens");
-      if (stored === "practitioner" || stored === "executive") return stored;
+      if (stored === "practitioner" || stored === "executive") {
+        setLens(stored);
+      }
     }
-    return "executive";
   }, [searchParams]);
 
   useEffect(() => {
@@ -43,6 +50,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
     if (!searchParams) return;
     const params = new URLSearchParams(searchParams.toString());
     params.set("lens", nextLens);
+    setLens(nextLens);
     router.push(`${pathname}?${params.toString()}`);
   };
 
@@ -50,7 +58,10 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
     <div className="min-h-screen bg-cloud">
       <header className="sticky top-0 z-30 border-b border-ink/10 bg-white/80 backdrop-blur">
         <div className="mx-auto flex w-full max-w-7xl items-center justify-between px-6 py-4">
-          <div className="flex items-center gap-3">
+          <Link
+            href={`/?lens=${lens}`}
+            className="flex items-center gap-3"
+          >
             <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-ink text-white">
               <Leaf className="h-5 w-5" />
             </div>
@@ -60,7 +71,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
               </p>
               <p className="text-lg font-semibold">Microgrid ROI Studio</p>
             </div>
-          </div>
+          </Link>
           <nav className="flex items-center gap-2 rounded-full bg-mist p-1">
             <button
               type="button"
