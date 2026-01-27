@@ -1,14 +1,50 @@
 "use client";
 
-import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { useEffect, useMemo } from "react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { Leaf, Sparkles } from "lucide-react";
 
 export default function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
-  const isPractitioner = pathname?.startsWith("/practitioner");
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
+  const lens = useMemo(() => {
+    const param = searchParams?.get("lens");
+    if (param === "practitioner" || param === "executive") return param;
+    if (typeof window !== "undefined") {
+      const stored = window.localStorage.getItem("microgrid:lens");
+      if (stored === "practitioner" || stored === "executive") return stored;
+    }
+    return "executive";
+  }, [searchParams]);
+
+  useEffect(() => {
+    if (!searchParams) return;
+    const hasLens = searchParams.get("lens");
+    if (!hasLens) {
+      const params = new URLSearchParams(searchParams.toString());
+      params.set("lens", lens);
+      router.replace(`${pathname}?${params.toString()}`);
+    }
+  }, [searchParams, lens, pathname, router]);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      window.localStorage.setItem("microgrid:lens", lens);
+    }
+  }, [lens]);
+
+  const isPractitioner = lens === "practitioner";
+
+  const handleSwitch = (nextLens: "executive" | "practitioner") => {
+    if (!searchParams) return;
+    const params = new URLSearchParams(searchParams.toString());
+    params.set("lens", nextLens);
+    router.push(`${pathname}?${params.toString()}`);
+  };
 
   return (
     <div className="min-h-screen bg-cloud">
@@ -26,8 +62,9 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
             </div>
           </div>
           <nav className="flex items-center gap-2 rounded-full bg-mist p-1">
-            <Link
-              href="/"
+            <button
+              type="button"
+              onClick={() => handleSwitch("executive")}
               className={cn(
                 "rounded-full px-4 py-2 text-sm font-medium",
                 !isPractitioner
@@ -36,9 +73,10 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
               )}
             >
               Executive
-            </Link>
-            <Link
-              href="/practitioner"
+            </button>
+            <button
+              type="button"
+              onClick={() => handleSwitch("practitioner")}
               className={cn(
                 "rounded-full px-4 py-2 text-sm font-medium",
                 isPractitioner
@@ -47,7 +85,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
               )}
             >
               Practitioner
-            </Link>
+            </button>
           </nav>
           <Button size="sm" variant="outline" className="hidden md:inline-flex">
             <Sparkles className="h-4 w-4" />

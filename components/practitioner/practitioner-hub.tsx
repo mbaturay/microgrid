@@ -2,7 +2,6 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
-import Link from "next/link";
 import { Download, UploadCloud, Lock } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -133,24 +132,6 @@ export default function PractitionerHub({
               </p>
             </div>
             <div className="flex flex-wrap items-center gap-2">
-              <div className="flex items-center gap-2 rounded-full bg-mist p-1">
-                <Link
-                  href={`/project/${activeProject.id}?lens=executive`}
-                  className={`rounded-full px-3 py-1.5 text-xs font-medium ${
-                    isExecutive ? "bg-white text-ink shadow" : "text-ink/60"
-                  }`}
-                >
-                  Executive
-                </Link>
-                <Link
-                  href={`/project/${activeProject.id}?lens=practitioner`}
-                  className={`rounded-full px-3 py-1.5 text-xs font-medium ${
-                    !isExecutive ? "bg-white text-ink shadow" : "text-ink/60"
-                  }`}
-                >
-                  Practitioner
-                </Link>
-              </div>
               <Button
                 size="sm"
                 variant="outline"

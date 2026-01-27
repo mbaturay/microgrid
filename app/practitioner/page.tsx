@@ -1,5 +1,5 @@
-import ExecutiveDashboard from "@/components/executive/executive-dashboard";
+import { redirect } from "next/navigation";
 
 export default function PractitionerPage() {
-  return <ExecutiveDashboard lens="practitioner" />;
+  redirect("/?lens=practitioner");
 }
