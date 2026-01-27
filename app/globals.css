@@ -1,0 +1,37 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light;
+}
+
+* {
+  @apply border-ink/10;
+}
+
+body {
+  @apply bg-cloud text-ink font-sans antialiased;
+}
+
+h1, h2, h3, h4 {
+  @apply font-heading text-ink;
+}
+
+.gradient-sheen {
+  background: radial-gradient(circle at top left, rgba(255, 181, 31, 0.18), transparent 45%),
+    radial-gradient(circle at bottom right, rgba(11, 133, 98, 0.16), transparent 50%),
+    #f4f7f7;
+}
+
+.kpi-card {
+  background: linear-gradient(135deg, #ffffff 0%, #f8fbfb 100%);
+}
+
+.data-grid {
+  @apply rounded-xl border border-ink/10 bg-white/80 backdrop-blur;
+}
+
+.input-lock {
+  @apply inline-flex items-center gap-1 text-xs text-ink/60;
+}

@@ -1,0 +1,132 @@
+{
+  "sections": [
+    {
+      "title": "Project Basics",
+      "description": "Foundational assumptions for the site and system.",
+      "variables": [
+        {
+          "key": "site_name",
+          "label": "Site Name",
+          "type": "string",
+          "default": "Desert Ridge Facility"
+        },
+        {
+          "key": "utility_rate",
+          "label": "Utility Rate",
+          "type": "currency",
+          "unit": "$/kWh",
+          "min": 0.05,
+          "max": 0.35,
+          "default": 0.18
+        },
+        {
+          "key": "project_life_years",
+          "label": "Project Life",
+          "type": "number",
+          "unit": "years",
+          "min": 10,
+          "max": 30,
+          "default": 25
+        }
+      ]
+    },
+    {
+      "title": "Financial Inputs",
+      "description": "CapEx, incentives, and financing settings.",
+      "variables": [
+        {
+          "key": "capex_total",
+          "label": "Total CapEx",
+          "type": "currency",
+          "unit": "USD",
+          "min": 0,
+          "default": 3200000
+        },
+        {
+          "key": "contingency_rate",
+          "label": "Contingency",
+          "type": "percent",
+          "min": 0,
+          "max": 0.3,
+          "default": 0.08
+        },
+        {
+          "key": "incentive_rate",
+          "label": "Incentive Rate",
+          "type": "percent",
+          "min": 0,
+          "max": 0.4,
+          "default": 0.12
+        },
+        {
+          "key": "discount_rate",
+          "label": "Discount Rate",
+          "type": "percent",
+          "min": 0.03,
+          "max": 0.2,
+          "default": 0.08
+        },
+        {
+          "key": "tax_benefit",
+          "label": "Total Tax Benefit",
+          "type": "currency",
+          "unit": "USD",
+          "min": 0,
+          "default": 220000
+        }
+      ]
+    },
+    {
+      "title": "Energy Inputs",
+      "description": "Production and savings assumptions.",
+      "variables": [
+        {
+          "key": "annual_savings",
+          "label": "Annual Energy Savings",
+          "type": "currency",
+          "unit": "USD",
+          "min": 0,
+          "default": 540000
+        },
+        {
+          "key": "battery_capacity_mwh",
+          "label": "Battery Capacity",
+          "type": "number",
+          "unit": "MWh",
+          "min": 0,
+          "default": 4.5
+        },
+        {
+          "key": "solar_capacity_mw",
+          "label": "Solar Capacity",
+          "type": "number",
+          "unit": "MW",
+          "min": 0,
+          "default": 6.2
+        }
+      ]
+    },
+    {
+      "title": "Operations",
+      "description": "Ongoing maintenance and lifecycle assumptions.",
+      "variables": [
+        {
+          "key": "om_cost_annual",
+          "label": "Annual O&M Cost",
+          "type": "currency",
+          "unit": "USD",
+          "min": 0,
+          "default": 85000
+        },
+        {
+          "key": "escalation_rate",
+          "label": "Escalation Rate",
+          "type": "percent",
+          "min": 0,
+          "max": 0.1,
+          "default": 0.02
+        }
+      ]
+    }
+  ]
+}

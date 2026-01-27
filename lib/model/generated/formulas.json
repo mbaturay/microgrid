@@ -1,0 +1,11 @@
+{
+  "outputs": {
+    "npv": "computed",
+    "roi": "computed",
+    "paybackYears": "computed",
+    "totalCapex": "computed",
+    "annualSavings": "computed",
+    "totalTaxBenefit": "computed"
+  },
+  "notes": "Partial formula coverage for POC. Add Excel-derived dependencies here."
+}
