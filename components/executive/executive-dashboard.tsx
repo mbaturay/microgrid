@@ -301,7 +301,7 @@ export default function ExecutiveDashboard() {
             {projects.slice(0, 5).map((project) => (
               <Link
                 key={project.id}
-                href={`/practitioner/${project.id}`}
+                href={`/executive/${project.id}`}
                 className="flex items-center justify-between rounded-2xl border border-ink/10 bg-white px-4 py-3 transition hover:border-jade/40"
               >
                 <div>
