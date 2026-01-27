@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { Leaf, Sparkles } from "lucide-react";
@@ -10,33 +10,32 @@ import { Leaf, Sparkles } from "lucide-react";
 export default function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
-  const searchParams = useSearchParams();
 
   const [lens, setLens] = useState<"executive" | "practitioner">("executive");
 
   useEffect(() => {
-    const param = searchParams?.get("lens");
+    if (typeof window === "undefined") return;
+    const params = new URLSearchParams(window.location.search);
+    const param = params.get("lens");
     if (param === "practitioner" || param === "executive") {
       setLens(param);
       return;
     }
-    if (typeof window !== "undefined") {
-      const stored = window.localStorage.getItem("microgrid:lens");
-      if (stored === "practitioner" || stored === "executive") {
-        setLens(stored);
-      }
+    const stored = window.localStorage.getItem("microgrid:lens");
+    if (stored === "practitioner" || stored === "executive") {
+      setLens(stored);
     }
-  }, [searchParams]);
+  }, [pathname]);
 
   useEffect(() => {
-    if (!searchParams) return;
-    const hasLens = searchParams.get("lens");
+    if (typeof window === "undefined") return;
+    const params = new URLSearchParams(window.location.search);
+    const hasLens = params.get("lens");
     if (!hasLens) {
-      const params = new URLSearchParams(searchParams.toString());
       params.set("lens", lens);
       router.replace(`${pathname}?${params.toString()}`);
     }
-  }, [searchParams, lens, pathname, router]);
+  }, [lens, pathname, router]);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -47,8 +46,8 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
   const isPractitioner = lens === "practitioner";
 
   const handleSwitch = (nextLens: "executive" | "practitioner") => {
-    if (!searchParams) return;
-    const params = new URLSearchParams(searchParams.toString());
+    if (typeof window === "undefined") return;
+    const params = new URLSearchParams(window.location.search);
     params.set("lens", nextLens);
     setLens(nextLens);
     router.push(`${pathname}?${params.toString()}`);
