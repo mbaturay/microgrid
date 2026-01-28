@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { MapPin, ArrowUpRight, Leaf, Sparkles } from "lucide-react";
@@ -73,9 +72,6 @@ export default function ExecutiveDashboard({
 }: {
   lens?: LensMode;
 }) {
-  const searchParams = useSearchParams();
-  const resolvedLens =
-    searchParams?.get("lens") === "practitioner" ? "practitioner" : lens;
   const [projects, setProjects] = useState<ProjectModel[]>([]);
 
   useEffect(() => {
@@ -100,7 +96,7 @@ export default function ExecutiveDashboard({
           <div className="flex items-start justify-between">
             <div>
               <p className="text-xs uppercase tracking-[0.2em] text-ink/50">
-                {resolvedLens === "executive"
+                {lens === "executive"
                   ? "Executive Portfolio Overview"
                   : "Practitioner Portfolio Overview"}
               </p>
@@ -108,13 +104,13 @@ export default function ExecutiveDashboard({
                 Solar & Microgrid Portfolio Command Center
               </h1>
               <p className="mt-3 max-w-xl text-sm text-ink/60">
-                {resolvedLens === "executive"
+                {lens === "executive"
                   ? "Read-only analytics for leadership visibility across pipeline, investment exposure, and ROI cadence."
                   : "Portfolio view for selecting a project workspace. Changes happen inside project detail."}
               </p>
             </div>
-            <Badge className={resolvedLens === "executive" ? "bg-jade/10 text-jade" : "bg-sun/20 text-ink"}>
-              {resolvedLens === "executive" ? "Read-only" : "Editable"}
+            <Badge className={lens === "executive" ? "bg-jade/10 text-jade" : "bg-sun/20 text-ink"}>
+              {lens === "executive" ? "Read-only" : "Editable"}
             </Badge>
           </div>
           <div className="mt-6 flex flex-wrap gap-3">
@@ -316,7 +312,7 @@ export default function ExecutiveDashboard({
             {projects.slice(0, 5).map((project) => (
               <Link
                 key={project.id}
-                href={`/project/${project.id}?lens=${resolvedLens}`}
+                href={`/project/${project.id}?lens=${lens}`}
                 className="flex items-center justify-between rounded-2xl border border-ink/10 bg-white px-4 py-3 transition hover:border-jade/40"
               >
                 <div>
